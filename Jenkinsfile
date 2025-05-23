@@ -40,7 +40,6 @@ pipeline {
                     '''
                 }
             }
-        }
 
         stage('Deploy') {
             agent {
@@ -65,6 +64,7 @@ pipeline {
             }
         }
     }
+    
 
     post {
         always {
@@ -78,3 +78,4 @@ pipeline {
         }
     }
 }
+
