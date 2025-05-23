@@ -55,7 +55,7 @@ pipeline {
                 npx netlify --version
 
                 echo "Linking Netlify project..."
-                npx netlify link --site=$NETLIFY_PROJECT_ID
+                npx netlify link --id=$NETLIFY_PROJECT_ID
 
                 echo "Deploying production. Project ID: $NETLIFY_PROJECT_ID"
                 npx netlify deploy --dir=build --prod --auth=$NETLIFY_AUTH_TOKEN
