@@ -49,7 +49,6 @@ pipeline {
                 }
             }
             steps {
-                unstash 'build-artifacts'
                 sh '''
                 rm -rf .netlify
                 npm install netlify-cli
