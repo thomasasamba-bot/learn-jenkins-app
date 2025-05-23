@@ -8,7 +8,7 @@ pipeline {
 
     stages {
         stage('Build') {
-            agent{
+            agent {
                 docker {
                     image 'node:18'
                     reuseNode true
@@ -26,39 +26,44 @@ pipeline {
             }
         }
 
-        stage( 'Test'){
-            agent{
+        stage('Test') {
+            agent {
                 docker {
-                    image 'node:18-alpine'
+                    image 'node:18'
                     reuseNode true
                 }
             }
             steps {
-                sh '''
-                test -f build/index.html
-                npm test || true
-                '''
+                    sh '''
+                    test -f build/index.html
+                    npm test
+                    '''
+                }
             }
         }
 
         stage('Deploy') {
-            agent{
+            agent {
                 docker {
-                    image 'node:18-alpine'
+                    image 'node:18'
                     reuseNode true
                 }
             }
             steps {
+                unstash 'build-artifacts'
                 sh '''
+                rm -rf .netlify
                 npm install netlify-cli
-                node_modules/.bin/netlify --version
+                npx netlify --version
+
+                echo "Linking Netlify project..."
+                npx netlify link --site=$NETLIFY_PROJECT_ID
+
                 echo "Deploying production. Project ID: $NETLIFY_PROJECT_ID"
-                npx netlify status
-                npx netlify deploy --dir build --prod
+                npx netlify deploy --dir=build --prod --auth=$NETLIFY_AUTH_TOKEN
                 '''
             }
         }
-
     }
 
     post {
